@@ -1,2 +1,2 @@
 # compiler-dev
-Create compiler based on risc-v study processor
+Create compiler based on risc-emulator study processor
