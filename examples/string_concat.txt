@@ -1,0 +1,14 @@
+string evere name;
+string evere greeting;
+int evere num;
+
+name = "World";
+greeting = "Hello";
+num = 42;
+
+print(greeting . " " . name); 
+print("Number: " . num);
+
+if (name == "World") {
+    print("It's a small world!");
+} 
