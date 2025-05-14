@@ -1,0 +1,5 @@
+int evere x = 5;
+if (x > 10){
+    int lim y = 10;
+}
+print(y);

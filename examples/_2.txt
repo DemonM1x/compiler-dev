@@ -1,0 +1,4 @@
+string evere hello = "Hello";
+string evere helloWorld = hello . " world!";
+print(hello);
+print(helloWorld);

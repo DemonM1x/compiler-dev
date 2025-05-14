@@ -1,0 +1,97 @@
+# Initialize f_1 (address 1000)
+li x1, 1
+li x2, 1000  # Load address of f_1
+sw x2, 0, x1  # Store value to variable
+# Initialize f_2 (address 1001)
+li x1, 1
+li x2, 1001  # Load address of f_2
+sw x2, 0, x1  # Store value to variable
+# Initialize n (address 1002)
+li x1, 8
+li x2, 1002  # Load address of n
+sw x2, 0, x1  # Store value to variable
+# Initialize f_res (address 1003)
+li x1, 1
+li x2, 1003  # Load address of f_res
+sw x2, 0, x1  # Store value to variable
+# Begin round loop
+li x1, 3
+add x20, x1, x0  # Save iterator to dedicated register
+li x2, 1004  # Load address of i
+sw x2, 0, x20  # Store initial value
+li x2, 1002  # Load address of n
+lw x31, x2, 0  # Load variable value
+add x3, x31, x0
+li x4, 1
+add x1, x3, x4
+add x21, x1, x0  # Save end value to dedicated register
+li x1, 1
+add x22, x1, x0  # Save step to dedicated register
+jal x0, __round_0
+__body_2:
+li x2, 1004  # Load address of i
+sw x2, 0, x20  # Update loop variable in memory
+# Assignment to f_res
+li x2, 1000  # Load address of f_1
+lw x31, x2, 0  # Load variable value
+add x3, x31, x0
+li x2, 1001  # Load address of f_2
+lw x31, x2, 0  # Load variable value
+add x4, x31, x0
+add x1, x3, x4
+li x2, 1003  # Load address of f_res
+sw x2, 0, x1  # Store value to variable
+# Assignment to f_1
+li x2, 1001  # Load address of f_2
+lw x31, x2, 0  # Load variable value
+add x1, x31, x0
+li x2, 1000  # Load address of f_1
+sw x2, 0, x1  # Store value to variable
+# Assignment to f_2
+li x2, 1003  # Load address of f_res
+lw x31, x2, 0  # Load variable value
+add x1, x31, x0
+li x2, 1001  # Load address of f_2
+sw x2, 0, x1  # Store value to variable
+# Increment loop variable in dedicated register
+add x20, x20, x22  # Add step to iterator
+li x2, 1004  # Load address of i
+sw x2, 0, x20  # Store updated value
+__round_0:
+# Check loop condition using dedicated registers
+slt x5, x20, x21  # x5 = 1 if i < end, 0 otherwise
+bne x5, x0, __body_2  # If i < end, continue loop
+__endround_1:
+# End round loop
+li x2, 1003  # Load address of f_res
+lw x31, x2, 0  # Load variable value
+add x1, x31, x0
+# Print value
+addi x10, x0, 10  # divisor
+addi x11, x0, 1023  # buffer end
+addi x12, x1, 0  # number to print
+addi x13, x0, 0  # is negative flag
+addi x14, x11, 0  # buffer position
+bge x12, x0, __producer_loop_3  # if positive, skip negation
+addi x13, x0, 1  # set negative flag
+sub x12, x0, x12  # negate number
+__producer_loop_3:
+div x15, x12, x10  # divide by 10
+rem x16, x12, x10  # get remainder
+addi x31, x16, 48  # convert to ASCII
+sw x14, 0, x31  # store digit
+addi x14, x14, -1  # move buffer position
+addi x12, x15, 0  # update number
+bne x12, x0, __producer_loop_3  # continue if not zero
+beq x13, x0, __after_minus_4  # skip minus if positive
+addi x31, x0, 45  # minus sign ASCII
+ewrite x31  # print minus
+__after_minus_4:
+addi x14, x14, 1  # adjust buffer position
+lw x31, x14, 0  # load digit
+ewrite x31  # print digit
+bne x14, x11, __after_minus_4  # continue if not end
+li x2, 10  # newline
+ewrite x2
+# Exit program
+ebreak  # Stop execution

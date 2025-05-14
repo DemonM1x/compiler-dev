@@ -1,0 +1,9 @@
+.idea
+.vscode
+.venv
+*.exe
+*.o
+cmake-build-debug
+lexer/*.yy.c
+parser/*.tab.c
+parser/*.tab.h

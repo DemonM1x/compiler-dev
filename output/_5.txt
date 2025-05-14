@@ -1,0 +1,138 @@
+# Initialize x (address 1000)
+li x1, 100
+li x2, 1000  # Load address of x
+sw x2, 0, x1  # Store value to variable
+# Initialize y (address 1001)
+li x1, 15
+li x2, 1001  # Load address of y
+sw x2, 0, x1  # Store value to variable
+# Begin while-loop
+__while_0:
+li x2, 1000  # Load address of x
+lw x31, x2, 0  # Load variable value
+add x3, x31, x0
+li x1, 0
+li x2, 1001  # Load address of y
+lw x31, x2, 0  # Load variable value
+add x1, x31, x0
+li x2, 0
+slt x2, x2, x1
+# Logical AND
+sne x5, x1, x0
+sne x6, x2, x0
+and x4, x5, x6
+slt x1, x4, x3
+beq x1, x0, __endwhile_1  # Exit loop if condition is false
+# Begin if-statement
+li x2, 1000  # Load address of x
+lw x31, x2, 0  # Load variable value
+add x3, x31, x0
+li x2, 1001  # Load address of y
+lw x31, x2, 0  # Load variable value
+add x4, x31, x0
+slt x1, x4, x3
+beq x1, x0, __else_2  # Jump if condition is false
+# Assignment to x
+li x2, 1000  # Load address of x
+lw x31, x2, 0  # Load variable value
+add x3, x31, x0
+li x2, 1001  # Load address of y
+lw x31, x2, 0  # Load variable value
+add x4, x31, x0
+# Compute modulo using rem instruction (remainder)
+rem x1, x3, x4
+li x2, 1000  # Load address of x
+sw x2, 0, x1  # Store value to variable
+jal x0, __endif_3
+__else_2:
+# Assignment to y
+li x2, 1001  # Load address of y
+lw x31, x2, 0  # Load variable value
+add x3, x31, x0
+li x2, 1000  # Load address of x
+lw x31, x2, 0  # Load variable value
+add x4, x31, x0
+# Compute modulo using rem instruction (remainder)
+rem x1, x3, x4
+li x2, 1001  # Load address of y
+sw x2, 0, x1  # Store value to variable
+__endif_3:
+# End if-statement
+jal x0, __while_0
+__endwhile_1:
+# End while-loop
+# Begin if-statement
+li x2, 1000  # Load address of x
+lw x31, x2, 0  # Load variable value
+add x3, x31, x0
+li x2, 1001  # Load address of y
+lw x31, x2, 0  # Load variable value
+add x4, x31, x0
+slt x1, x4, x3
+beq x1, x0, __else_4  # Jump if condition is false
+li x2, 1000  # Load address of x
+lw x31, x2, 0  # Load variable value
+add x1, x31, x0
+# Print value
+addi x10, x0, 10  # divisor
+addi x11, x0, 1023  # buffer end
+addi x12, x1, 0  # number to print
+addi x13, x0, 0  # is negative flag
+addi x14, x11, 0  # buffer position
+bge x12, x0, __producer_loop_6  # if positive, skip negation
+addi x13, x0, 1  # set negative flag
+sub x12, x0, x12  # negate number
+__producer_loop_6:
+div x15, x12, x10  # divide by 10
+rem x16, x12, x10  # get remainder
+addi x31, x16, 48  # convert to ASCII
+sw x14, 0, x31  # store digit
+addi x14, x14, -1  # move buffer position
+addi x12, x15, 0  # update number
+bne x12, x0, __producer_loop_6  # continue if not zero
+beq x13, x0, __after_minus_7  # skip minus if positive
+addi x31, x0, 45  # minus sign ASCII
+ewrite x31  # print minus
+__after_minus_7:
+addi x14, x14, 1  # adjust buffer position
+lw x31, x14, 0  # load digit
+ewrite x31  # print digit
+bne x14, x11, __after_minus_7  # continue if not end
+li x2, 10  # newline
+ewrite x2
+jal x0, __endif_5
+__else_4:
+li x2, 1001  # Load address of y
+lw x31, x2, 0  # Load variable value
+add x1, x31, x0
+# Print value
+addi x10, x0, 10  # divisor
+addi x11, x0, 1023  # buffer end
+addi x12, x1, 0  # number to print
+addi x13, x0, 0  # is negative flag
+addi x14, x11, 0  # buffer position
+bge x12, x0, __producer_loop_8  # if positive, skip negation
+addi x13, x0, 1  # set negative flag
+sub x12, x0, x12  # negate number
+__producer_loop_8:
+div x15, x12, x10  # divide by 10
+rem x16, x12, x10  # get remainder
+addi x31, x16, 48  # convert to ASCII
+sw x14, 0, x31  # store digit
+addi x14, x14, -1  # move buffer position
+addi x12, x15, 0  # update number
+bne x12, x0, __producer_loop_8  # continue if not zero
+beq x13, x0, __after_minus_9  # skip minus if positive
+addi x31, x0, 45  # minus sign ASCII
+ewrite x31  # print minus
+__after_minus_9:
+addi x14, x14, 1  # adjust buffer position
+lw x31, x14, 0  # load digit
+ewrite x31  # print digit
+bne x14, x11, __after_minus_9  # continue if not end
+li x2, 10  # newline
+ewrite x2
+__endif_5:
+# End if-statement
+# Exit program
+ebreak  # Stop execution

@@ -1,0 +1,21 @@
+// Пример конкатенации нескольких строк
+string evere hello = "Hello";
+string evere space = " ";
+string evere world = "world";
+string evere mark = "!";
+
+// Конкатенация двух строк
+print(hello . space);
+
+// Конкатенация трех строк
+print(hello . space . world);
+
+// Конкатенация четырех строк 
+print(hello . space . world . mark);
+
+// Более сложный пример с вложенными операциями
+print((hello . space) . (world . mark));
+
+// Альтернативный синтаксис
+string evere greeting = hello . space . world . mark;
+print(greeting); 

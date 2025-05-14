@@ -1,0 +1,5 @@
+int lim x = 10;
+int lim y = 3;
+int lim d = 4;
+int lim g = x / 3;
+print(x * y / d - g + 5);

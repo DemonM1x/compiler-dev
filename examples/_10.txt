@@ -1,0 +1,2 @@
+int evere x = 10;
+string evere x = "Hello";

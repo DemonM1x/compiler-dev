@@ -1,0 +1,51 @@
+# Initialize x (address 1000)
+li x1, 5
+li x2, 1000  # Load address of x
+sw x2, 0, x1  # Store value to variable
+# Begin if-statement
+li x2, 1000  # Load address of x
+lw x31, x2, 0  # Load variable value
+add x3, x31, x0
+li x4, 10
+slt x1, x4, x3
+beq x1, x0, __else_0  # Jump if condition is false
+# Initialize y (address 1001)
+li x1, 10
+li x2, 1001  # Load address of y
+sw x2, 0, x1  # Store value to variable
+jal x0, __endif_1
+__else_0:
+__endif_1:
+# End if-statement
+li x2, 1001  # Load address of y
+lw x31, x2, 0  # Load variable value
+add x1, x31, x0
+# Print value
+addi x10, x0, 10  # divisor
+addi x11, x0, 1023  # buffer end
+addi x12, x1, 0  # number to print
+addi x13, x0, 0  # is negative flag
+addi x14, x11, 0  # buffer position
+bge x12, x0, __producer_loop_2  # if positive, skip negation
+addi x13, x0, 1  # set negative flag
+sub x12, x0, x12  # negate number
+__producer_loop_2:
+div x15, x12, x10  # divide by 10
+rem x16, x12, x10  # get remainder
+addi x31, x16, 48  # convert to ASCII
+sw x14, 0, x31  # store digit
+addi x14, x14, -1  # move buffer position
+addi x12, x15, 0  # update number
+bne x12, x0, __producer_loop_2  # continue if not zero
+beq x13, x0, __after_minus_3  # skip minus if positive
+addi x31, x0, 45  # minus sign ASCII
+ewrite x31  # print minus
+__after_minus_3:
+addi x14, x14, 1  # adjust buffer position
+lw x31, x14, 0  # load digit
+ewrite x31  # print digit
+bne x14, x11, __after_minus_3  # continue if not end
+li x2, 10  # newline
+ewrite x2
+# Exit program
+ebreak  # Stop execution

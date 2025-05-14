@@ -1,0 +1,131 @@
+# Initialize hello (address 1000)
+li x2, 1001  # start address
+li x1, 72  # 'H'
+sw x2, 0, x1  # save char
+addi x2, x2, 1  # next position
+li x1, 101  # 'e'
+sw x2, 0, x1  # save char
+addi x2, x2, 1  # next position
+li x1, 108  # 'l'
+sw x2, 0, x1  # save char
+addi x2, x2, 1  # next position
+li x1, 108  # 'l'
+sw x2, 0, x1  # save char
+addi x2, x2, 1  # next position
+li x1, 111  # 'o'
+sw x2, 0, x1  # save char
+addi x2, x2, 1  # next position
+li x1, 0  # null terminator
+sw x2, 0, x1
+li x1, 1001
+li x2, 1000  # Load address of hello
+sw x2, 0, x1  # Store value to variable
+# Initialize helloWorld (address 1018)
+li x2, 1000  # Load address of hello
+lw x31, x2, 0  # Load variable value
+add x5, x31, x0
+li x2, 1019  # start address
+li x1, 32  # ' '
+sw x2, 0, x1  # save char
+addi x2, x2, 1  # next position
+li x1, 119  # 'w'
+sw x2, 0, x1  # save char
+addi x2, x2, 1  # next position
+li x1, 111  # 'o'
+sw x2, 0, x1  # save char
+addi x2, x2, 1  # next position
+li x1, 114  # 'r'
+sw x2, 0, x1  # save char
+addi x2, x2, 1  # next position
+li x1, 108  # 'l'
+sw x2, 0, x1  # save char
+addi x2, x2, 1  # next position
+li x1, 100  # 'd'
+sw x2, 0, x1  # save char
+addi x2, x2, 1  # next position
+li x1, 33  # '!'
+sw x2, 0, x1  # save char
+addi x2, x2, 1  # next position
+li x1, 0  # null terminator
+sw x2, 0, x1
+li x6, 1019
+li x2, 1000  # Load address of hello
+lw x31, x2, 0  # Load variable value
+add x5, x31, x0
+li x2, 1038  # start address
+li x1, 32  # ' '
+sw x2, 0, x1  # save char
+addi x2, x2, 1  # next position
+li x1, 119  # 'w'
+sw x2, 0, x1  # save char
+addi x2, x2, 1  # next position
+li x1, 111  # 'o'
+sw x2, 0, x1  # save char
+addi x2, x2, 1  # next position
+li x1, 114  # 'r'
+sw x2, 0, x1  # save char
+addi x2, x2, 1  # next position
+li x1, 108  # 'l'
+sw x2, 0, x1  # save char
+addi x2, x2, 1  # next position
+li x1, 100  # 'd'
+sw x2, 0, x1  # save char
+addi x2, x2, 1  # next position
+li x1, 33  # '!'
+sw x2, 0, x1  # save char
+addi x2, x2, 1  # next position
+li x1, 0  # null terminator
+sw x2, 0, x1
+li x6, 1038
+# String concatenation
+add x3, x5, x0  # first string
+add x4, x6, x0  # second string
+# Copy first string
+li x2, 1057  # result address
+__copy_first_0:
+lw x1, x3, 0  # load char from first string
+sw x2, 0, x1  # save char to result
+addi x2, x2, 1  # next result position
+addi x3, x3, 1  # next source position
+lw x1, x3, 0  # check next char
+bne x1, x0, __copy_first_0  # if not null, continue loop
+__first_done_2:
+__copy_second_1:
+lw x1, x4, 0  # load char from second string
+sw x2, 0, x1  # save char to result
+beq x1, x0, __second_done_3  # if null, second string done
+addi x2, x2, 1  # next result position
+addi x4, x4, 1  # next source position
+jal x0, __copy_second_1  # loop back
+__second_done_3:
+li x1, 1057
+li x2, 1018  # Load address of helloWorld
+sw x2, 0, x1  # Store value to variable
+li x2, 1000  # Load address of hello
+lw x31, x2, 0  # Load variable value
+add x1, x31, x0
+# Print value
+__print_loop_6:
+lw x2, x1, 0  # load char
+beq x2, x0, __print_done_7  # check for null
+ewrite x2  # print char
+addi x1, x1, 1  # next char
+jal x0, __print_loop_6  # continue loop
+__print_done_7:
+li x2, 10  # newline
+ewrite x2
+li x2, 1018  # Load address of helloWorld
+lw x31, x2, 0  # Load variable value
+add x1, x31, x0
+# Print value
+__print_loop_10:
+lw x2, x1, 0  # load char
+beq x2, x0, __print_done_11  # check for null
+ewrite x2  # print char
+addi x1, x1, 1  # next char
+jal x0, __print_loop_10  # continue loop
+__print_done_11:
+li x2, 10  # newline
+ewrite x2
+# Exit program
+ebreak  # Stop execution

@@ -9,7 +9,7 @@ FLEX_FLAGS =
 BISON_FLAGS = -d
 
 # Source and object files
-SRCS = main.c ast.c risc_generator.c parser/parser.tab.c lexer/lex.yy.c
+SRCS = main.c ast.c risc_generator.c ast_visualizer.c error_handler.c parser/parser.tab.c lexer/lex.yy.c
 OBJS = $(SRCS:.c=.o)
 TARGET = compiler.exe
 
@@ -31,9 +31,12 @@ parser/parser.tab.c parser/parser.tab.h: parser/parser.y
 	$(BISON) $(BISON_FLAGS) -o parser/parser.tab.c $<
 
 # Add dependencies to ensure flex and bison files are generated
-main.o: parser/parser.tab.h
+main.o: parser/parser.tab.h error_handler.h
 parser/parser.tab.o: parser/parser.tab.c
 lexer/lex.yy.o: lexer/lex.yy.c
+risc_generator.o: risc_generator.c risc_generator.h ast.h error_handler.h
+ast_visualizer.o: ast_visualizer.c ast_visualizer.h ast.h
+error_handler.o: error_handler.c error_handler.h
 
 clean:
 	-rm -f $(OBJS) $(TARGET) 

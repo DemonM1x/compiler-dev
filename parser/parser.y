@@ -11,6 +11,29 @@ extern int yyparse();
 extern void yyerror(const char* s);
 extern FILE* yyin;
 
+// Функции для получения текущей позиции в исходном коде
+extern int get_current_line(void);
+extern int get_current_column(void);
+extern void get_token_position(int *line, int *column);
+
+// Текущее имя файла
+static char current_filename[256] = "";
+
+// Установить имя текущего файла для парсера
+void set_parser_filename(const char* filename) {
+    if (filename) {
+        strncpy(current_filename, filename, sizeof(current_filename) - 1);
+        current_filename[sizeof(current_filename) - 1] = '\0';
+    } else {
+        strcpy(current_filename, "unknown");
+    }
+}
+
+// Получить имя файла
+const char* get_parser_filename(void) {
+    return current_filename;
+}
+
 // Глобальный корень AST определен в ast.c
 extern ASTNode* ast_root;
 %}
@@ -18,19 +41,17 @@ extern ASTNode* ast_root;
 
 %union{
    int ival;
-   float fval;
    char* sval;
    ASTNode* node;
 }
 
 %token <ival> INT_LITERAL
-%token <fval> FLOAT_LITERAL
 %token <sval> IDENTIFIER STRING_LITERAL COMPARE
 
 %token IF ELSE WHILE ROUND IN RANGE
 %token EVERE LIM PRINT
 %token AND OR
-%token INT FLOAT STRING
+%token INT STRING
 %token UNKNOWN
 
 %type <node> program operation_list operation declaration
@@ -39,7 +60,7 @@ extern ASTNode* ast_root;
 
 %right '='
 %left '+' '-'
-%left '*' '/'
+%left '*' '/' '%'
 %left '.'
 
 %start program
@@ -86,13 +107,6 @@ declaration
         free_node($2);
         free($3);
     }
-    | FLOAT scope_type IDENTIFIER  
-    { 
-        int is_global = $2->literal.int_value;
-        $$ = create_variable_declaration($3, "float", is_global);
-        free_node($2);
-        free($3);
-    }
     | STRING scope_type IDENTIFIER  
     { 
         int is_global = $2->literal.int_value;
@@ -104,13 +118,6 @@ declaration
     { 
         int is_global = $2->literal.int_value;
         $$ = create_variable_declaration_with_init($3, "int", is_global, $5);
-        free_node($2);
-        free($3);
-    }
-    | FLOAT scope_type IDENTIFIER '=' expr
-    { 
-        int is_global = $2->literal.int_value;
-        $$ = create_variable_declaration_with_init($3, "float", is_global, $5);
         free_node($2);
         free($3);
     }
@@ -198,6 +205,10 @@ expr
     { 
         $$ = create_binary_operation("/", $1, $3);
     }
+    | expr '%' expr
+    { 
+        $$ = create_binary_operation("%", $1, $3);
+    }
     | expr '.' expr
     { 
         $$ = create_binary_operation(".", $1, $3);
@@ -223,10 +234,6 @@ expr
     { 
         $$ = create_literal_int($1);
     }
-    | FLOAT_LITERAL
-    { 
-        $$ = create_literal_float($1);
-    }
     | STRING_LITERAL
     { 
         $$ = create_literal_string($1);
@@ -242,7 +249,8 @@ expr
 %%
 
 void yyerror(const char* s) {
-    fprintf(stderr, "Parser error: %s\n", s);
+    fprintf(stderr, "Parser error at %s:%d:%d: %s\n", 
+            current_filename, get_current_line(), get_current_column(), s);
     exit(1);
 }
 
@@ -255,6 +263,9 @@ int parser_init(const char* filename) {
         return 1;
     }
     yyin = input_file;
+    
+    // Установка имени файла
+    set_parser_filename(filename);
     
     // Старт парсера
     yyparse();

@@ -1,0 +1,7 @@
+int evere x = 10;
+int evere y = 2;
+print(x + y);
+print(x - y);
+print(x * y);
+print(x / y);
+print(x % y);

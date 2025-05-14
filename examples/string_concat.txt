@@ -1,14 +1,4 @@
-string evere name;
-string evere greeting;
-int evere num;
+string evere hello = "Hello ";
+string evere world = "world";
+print(hello . world);
 
-name = "World";
-greeting = "Hello";
-num = 42;
-
-print(greeting . " " . name); 
-print("Number: " . num);
-
-if (name == "World") {
-    print("It's a small world!");
-} 

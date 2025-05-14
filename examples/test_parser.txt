@@ -1,37 +1,7 @@
 
-// Объявление переменных с разной областью видимости
-int evere global_var;
-int lim local_var;
-float evere pi;
-string lim message;
-
-// Инициализация переменных
-global_var = 100;
-local_var = 42;
-pi = 3.14;
-message = "Hello, world!";
-
+int lim local_var = 42;
 // Пример использования цикла round
 round i in range(0, 10, 1) {
-    print(i);
+    print(local_var);
     local_var = local_var + 1;
 }
-
-// Вложенная структура циклов и условий
-if (global_var > 50) {
-    while (local_var < 100) {
-        local_var = local_var + 1;
-        if (local_var == 75) {
-            print(local_var);
-        }
-    }
-} else {
-    print(global_var);
-}
-
-// Блоки кода
-{
-    int lim temp;
-    temp = 5;
-    print(temp);
-} 

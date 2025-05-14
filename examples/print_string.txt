@@ -1,0 +1,2 @@
+float evere di = 1.25;
+print(di);
