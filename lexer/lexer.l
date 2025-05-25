@@ -3,7 +3,7 @@
 #include "../parser/parser.tab.h" 
 #include <string.h>
 
-// Добавляем переменные для отслеживания позиции в файле
+
 int line_num = 1;
 int column_num = 1;
 char current_line[1024] = "";
@@ -20,13 +20,13 @@ void update_line() {
     column_num = 1;
 }
 
-// Функция для получения текущей позиции токена
+
 void get_token_position(int *line, int *column) {
     if (line) *line = line_num;
     if (column) *column = column_num;
 }
 
-// Экспортируем текущие координаты в коде
+
 int get_current_line() { return line_num; }
 int get_current_column() { return column_num; }
 %}

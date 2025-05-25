@@ -5,21 +5,20 @@
 #include <string.h>
 #include "../ast.h"
 
-// Объявления функций
+
 extern int yylex();
 extern int yyparse();
 extern void yyerror(const char* s);
 extern FILE* yyin;
 
-// Функции для получения текущей позиции в исходном коде
 extern int get_current_line(void);
 extern int get_current_column(void);
 extern void get_token_position(int *line, int *column);
 
-// Текущее имя файла
+
 static char current_filename[256] = "";
 
-// Установить имя текущего файла для парсера
+
 void set_parser_filename(const char* filename) {
     if (filename) {
         strncpy(current_filename, filename, sizeof(current_filename) - 1);
@@ -29,12 +28,10 @@ void set_parser_filename(const char* filename) {
     }
 }
 
-// Получить имя файла
 const char* get_parser_filename(void) {
     return current_filename;
 }
 
-// Глобальный корень AST определен в ast.c
 extern ASTNode* ast_root;
 %}
 
@@ -254,7 +251,6 @@ void yyerror(const char* s) {
     exit(1);
 }
 
-// Инициализация парсера
 int parser_init(const char* filename) {
     // Открытие входного файла
     FILE* input_file = fopen(filename, "r");
@@ -276,7 +272,7 @@ int parser_init(const char* filename) {
     return 0;
 }
 
-// Получение корня AST
 ASTNode* get_ast_root() {
     return ast_root;
 }
+

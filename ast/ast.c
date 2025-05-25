@@ -2,17 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Глобальная переменная для хранения корня AST
 ASTNode *ast_root = NULL;
 
-// Инициализация списка узлов
 void init_node_list(NodeList *list) {
     list->items = NULL;
     list->size = 0;
     list->capacity = 0;
 }
 
-// Добавление узла в список
 void add_to_list(NodeList *list, ASTNode *node) {
     if (list->size >= list->capacity) {
         size_t new_capacity = list->capacity == 0 ? 4 : list->capacity * 2;
@@ -21,14 +18,12 @@ void add_to_list(NodeList *list, ASTNode *node) {
             list->items = new_items;
             list->capacity = new_capacity;
         } else {
-            // Обработка ошибки выделения памяти
             return;
         }
     }
     list->items[list->size++] = node;
 }
 
-// Создание строки в куче
 char *strdup_custom(const char *str) {
     if (!str) return NULL;
     size_t len = strlen(str);
@@ -39,7 +34,6 @@ char *strdup_custom(const char *str) {
     return new_str;
 }
 
-// Создание узла программы
 ASTNode *create_program_node() {
     ASTNode *node = (ASTNode *) malloc(sizeof(ASTNode));
     if (node) {
@@ -49,7 +43,6 @@ ASTNode *create_program_node() {
     return node;
 }
 
-// Создание узла объявления переменной
 ASTNode *create_variable_declaration(const char *name, const char *var_type, int is_global) {
     ASTNode *node = (ASTNode *) malloc(sizeof(ASTNode));
     if (node) {
@@ -57,12 +50,11 @@ ASTNode *create_variable_declaration(const char *name, const char *var_type, int
         node->variable.name = strdup_custom(name);
         node->variable.var_type = strdup_custom(var_type);
         node->variable.is_global = is_global;
-        node->variable.initializer = NULL; // По умолчанию нет инициализатора
+        node->variable.initializer = NULL;
     }
     return node;
 }
 
-// Создание узла объявления переменной с инициализатором
 ASTNode *
 create_variable_declaration_with_init(const char *name, const char *var_type, int is_global, ASTNode *initializer) {
     ASTNode *node = create_variable_declaration(name, var_type, is_global);
@@ -72,7 +64,6 @@ create_variable_declaration_with_init(const char *name, const char *var_type, in
     return node;
 }
 
-// Создание узла бинарной операции
 ASTNode *create_binary_operation(const char *op_type, ASTNode *left, ASTNode *right) {
     ASTNode *node = (ASTNode *) malloc(sizeof(ASTNode));
     if (node) {
@@ -84,7 +75,6 @@ ASTNode *create_binary_operation(const char *op_type, ASTNode *left, ASTNode *ri
     return node;
 }
 
-// Создание узла литерала целого числа
 ASTNode *create_literal_int(int value) {
     ASTNode *node = (ASTNode *) malloc(sizeof(ASTNode));
     if (node) {
@@ -95,7 +85,6 @@ ASTNode *create_literal_int(int value) {
     return node;
 }
 
-// Создание узла литерала числа с плавающей точкой
 ASTNode *create_literal_float(float value) {
     ASTNode *node = (ASTNode *) malloc(sizeof(ASTNode));
     if (node) {
@@ -106,7 +95,6 @@ ASTNode *create_literal_float(float value) {
     return node;
 }
 
-// Создание узла литерала строки
 ASTNode *create_literal_string(const char *value) {
     ASTNode *node = (ASTNode *) malloc(sizeof(ASTNode));
     if (node) {
@@ -117,7 +105,6 @@ ASTNode *create_literal_string(const char *value) {
     return node;
 }
 
-// Создание узла идентификатора
 ASTNode *create_identifier_node(const char *name) {
     ASTNode *node = (ASTNode *) malloc(sizeof(ASTNode));
     if (node) {
@@ -127,7 +114,6 @@ ASTNode *create_identifier_node(const char *name) {
     return node;
 }
 
-// Создание узла присваивания
 ASTNode *create_assignment_node(const char *target, ASTNode *value) {
     ASTNode *node = (ASTNode *) malloc(sizeof(ASTNode));
     if (node) {
@@ -138,7 +124,6 @@ ASTNode *create_assignment_node(const char *target, ASTNode *value) {
     return node;
 }
 
-// Создание узла if-условия
 ASTNode *create_if_node(ASTNode *condition, ASTNode *then_branch, ASTNode *else_branch) {
     ASTNode *node = (ASTNode *) malloc(sizeof(ASTNode));
     if (node) {
@@ -150,7 +135,6 @@ ASTNode *create_if_node(ASTNode *condition, ASTNode *then_branch, ASTNode *else_
     return node;
 }
 
-// Создание узла while-цикла
 ASTNode *create_while_node(ASTNode *condition, ASTNode *body) {
     ASTNode *node = (ASTNode *) malloc(sizeof(ASTNode));
     if (node) {
@@ -161,7 +145,6 @@ ASTNode *create_while_node(ASTNode *condition, ASTNode *body) {
     return node;
 }
 
-// Создание узла round-цикла
 ASTNode *create_round_node(const char *variable, ASTNode *start, ASTNode *end, ASTNode *step, ASTNode *body) {
     ASTNode *node = (ASTNode *) malloc(sizeof(ASTNode));
     if (node) {
@@ -175,7 +158,6 @@ ASTNode *create_round_node(const char *variable, ASTNode *start, ASTNode *end, A
     return node;
 }
 
-// Создание узла блока
 ASTNode *create_block_node() {
     ASTNode *node = (ASTNode *) malloc(sizeof(ASTNode));
     if (node) {
@@ -185,7 +167,6 @@ ASTNode *create_block_node() {
     return node;
 }
 
-// Создание узла печати
 ASTNode *create_print_node(ASTNode *expression) {
     ASTNode *node = (ASTNode *) malloc(sizeof(ASTNode));
     if (node) {
@@ -195,14 +176,12 @@ ASTNode *create_print_node(ASTNode *expression) {
     return node;
 }
 
-// Добавление дочернего узла
 void add_child(ASTNode *parent, ASTNode *child) {
     if (parent && child && (parent->type == NODE_BLOCK || parent->type == NODE_PROGRAM)) {
         add_to_list(&parent->block.children, child);
     }
 }
 
-// Освобождение памяти, выделенной под узел
 void free_node(ASTNode *node) {
     if (!node) return;
 

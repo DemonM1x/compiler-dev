@@ -18,7 +18,6 @@ typedef enum {
     NODE_PRINT
 } NodeType;
 
-// Предварительное объявление структуры для рекурсивного использования
 typedef struct ASTNode ASTNode;
 
 typedef struct {
@@ -27,60 +26,51 @@ typedef struct {
     size_t capacity;
 } NodeList;
 
-// Структура для узла AST
 struct ASTNode {
     NodeType type;
     union {
-        // Для NODE_VARIABLE_DECLARATION
         struct {
             char *name;
             char *var_type;
-            int is_global; // 1 = глобальная (evere), 0 = локальная (lim)
-            ASTNode *initializer; // Инициализатор переменной, может быть NULL
+            int is_global;
+            ASTNode *initializer;
         } variable;
 
-        // Для NODE_BINARY_OPERATION
         struct {
-            char *op_type;  // Изменил имя с operator на op_type
+            char *op_type;
             ASTNode *left;
             ASTNode *right;
         } binary_op;
 
-        // Для NODE_LITERAL
         struct {
             union {
                 int int_value;
                 float float_value;
                 char *string_value;
             };
-            char *type; // "int", "float", "string"
+            char *type;
         } literal;
 
-        // Для NODE_IDENTIFIER
         struct {
             char *name;
         } identifier;
 
-        // Для NODE_ASSIGNMENT
         struct {
             char *target;
             ASTNode *value;
         } assignment;
 
-        // Для NODE_IF_STATEMENT
         struct {
             ASTNode *condition;
             ASTNode *then_branch;
-            ASTNode *else_branch; // может быть NULL
+            ASTNode *else_branch;
         } if_stmt;
 
-        // Для NODE_WHILE_LOOP
         struct {
             ASTNode *condition;
             ASTNode *body;
         } while_loop;
 
-        // Для NODE_ROUND_LOOP
         struct {
             char *variable;
             ASTNode *start;
@@ -89,19 +79,16 @@ struct ASTNode {
             ASTNode *body;
         } round_loop;
 
-        // Для NODE_BLOCK и NODE_PROGRAM
         struct {
             NodeList children;
         } block;
 
-        // Для NODE_PRINT
         struct {
             ASTNode *expression;
         } print;
     };
 };
 
-// Функции для создания узлов
 ASTNode *create_program_node();
 
 ASTNode *create_variable_declaration(const char *name, const char *var_type, int is_global);
@@ -131,12 +118,10 @@ ASTNode *create_block_node();
 
 ASTNode *create_print_node(ASTNode *expression);
 
-// Функции для работы со списком узлов
 void add_child(ASTNode *parent, ASTNode *child);
 
 void free_node(ASTNode *node);
 
-// Глобальная переменная для хранения корня AST
 extern ASTNode *ast_root;
 
 #endif /* AST_H */ 
